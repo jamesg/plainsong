@@ -1,0 +1,9 @@
+[submodule "hades"]
+	path = hades
+	url = ../hades.git
+[submodule "atlas"]
+	path = atlas
+	url = ../atlas.git
+[submodule "commandline"]
+	path = commandline
+	url = ../commandline.git

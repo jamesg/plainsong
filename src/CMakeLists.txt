@@ -1,0 +1,21 @@
+add_library(
+    plainsong-server-lib
+    db.cpp
+    player.cpp
+    router.cpp
+    )
+include_directories(./)
+target_link_libraries(
+    plainsong-server-lib
+    atlas-auth
+    atlas-com-api
+    atlas-com-db
+    atlas-com-http-server
+    atlas-web
+    hades
+    ${CMAKE_CURRENT_BINARY_DIR}/../web/static.a
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${Boost_LIBRARIES}
+    ${SDLMIXER_LIBRARY}
+    ${SDL2_LIBRARIES}
+    )

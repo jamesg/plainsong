@@ -1,0 +1,110 @@
+<html>
+<meta charset="UTF-8">
+
+<head>
+
+<title>Plainsong</title>
+
+<link href="/atlas/css/defaults.css" rel="stylesheet" type="text/css" media="all"></link>
+<link href="/atlas/css/grid.css" rel="stylesheet" type="text/css" media="all"></link>
+<link href="/atlas/css/navigation.css" rel="stylesheet" type="text/css" media="all"></link>
+<link href="/atlas/css/list.css" rel="stylesheet" type="text/css" media="all"></link>
+<link href="/atlas/css/teletype-theme.css" rel="stylesheet" type="text/css" media="all"></link>
+<link
+    href="/atlas/open-iconic/font/css/open-iconic.css"
+    rel="stylesheet"
+    type="text/css"
+    media="all">
+</link>
+
+<script src="/atlas/svg-injector.min.js"></script>
+
+
+<style type="text/css">
+.icon {
+    width: 32px;
+    height: 32px;
+    fill: black;
+}
+</style>
+
+</head>
+
+<body>
+
+<img src="/atlas/open-iconic/sprite/open-iconic.svg" class="iconic-sprite" style="display:none;" />
+
+<ul id="navigation" class="navigation navigation-breadcrumbs"></ul>
+<div id="template-content" class="content"></div>
+
+<script type="text/template" id="homepage-template">
+    <h1 name="application-title">Plainsong</h1>
+    <div name="player"></div>
+    <ul name="browser" class="action-list"></ul>
+</script>
+
+<script type="text/template" id="player-template">
+    <button type="button" name="prev">
+        <svg viewBox="0 0 8 8" class="icon">
+            <use xlink:href="#media-step-backward" class="icon-media-step-backward"></use>
+        </svg>
+    </button>
+    <button type="button" name="stop">
+        <svg viewBox="0 0 8 8" class="icon">
+            <use xlink:href="#media-stop" class="icon-media-stop"></use>
+        </svg>
+    </button>
+    <button type="button" name="pause">
+        <svg viewBox="0 0 8 8" class="icon">
+            <use xlink:href="#media-pause" class="icon-media-pause"></use>
+        </svg>
+    </button>
+    <button type="button" name="play">
+        <svg viewBox="0 0 8 8" class="icon">
+            <use xlink:href="#media-play" class="icon-media-play"></use>
+        </svg>
+    </button>
+    <button type="button" name="next">
+        <svg viewBox="0 0 8 8" class="icon">
+            <use xlink:href="#media-step-forward" class="icon-media-step-forward"></use>
+        </svg>
+    </button>
+    <br>
+    <button type="button" name="low">
+        <svg viewBox="0 0 8 8" class="icon">
+            <use xlink:href="#volume-low" class="icon-volume-low"></use>
+        </svg>
+    </button>
+    <%for(var i = 0; i < 14; ++i) {%>
+        <input type="radio" name="volume" value="<%-i%>" <%if(volume == i){%>checked<%}%>></input>
+    <%}%>
+    <button type="button" name="high">
+        <svg viewBox="0 0 8 8" class="icon">
+            <use xlink:href="#volume-high" class="icon-volume-high"></use>
+        </svg>
+    </button>
+    <br>
+    <p>Now playing; <%-title%> (<%-formattedTime%>)</p>
+</script>
+
+<script type="text/javascript" src="/atlas/underscore.js"></script>
+<script type="text/javascript" src="/atlas/backbone.js"></script>
+<script type="text/javascript" src="/atlas/jquery.min.js"></script>
+<script type="text/javascript" src="/atlas/moment.min.js"></script>
+<script type="text/javascript" src="/atlas/stacked_application.js"></script>
+<script type="text/javascript" src="index.js"></script>
+<script type="text/javascript">
+    // Elements to inject
+    var mySVGsToInject = document.querySelectorAll('.iconic-sprite');
+
+    // Do the injection
+    SVGInjector(mySVGsToInject);
+
+    Backbone.$ = $;
+    var gApplication = new StackedApplication(HomePage);
+    gApplication.goHome();
+</script>
+
+</body>
+
+</html>
