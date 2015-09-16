@@ -40,7 +40,7 @@ find_package(OpenSSL)
 find_package(Boost COMPONENTS date_time filesystem random regex system thread)
 
 include(FindPkgConfig)
-pkg_search_module(SDL2 REQUIRED)
+pkg_search_module(SDL2 REQUIRED SDL2_image)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 include_directories("atlas/lib/mongoose/include")
