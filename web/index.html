@@ -44,24 +44,14 @@
 </script>
 
 <script type="text/template" id="player-template">
-    <button type="button" name="prev">
-        <svg viewBox="0 0 8 8" class="icon">
-            <use xlink:href="#media-step-backward" class="icon-media-step-backward"></use>
-        </svg>
-    </button>
     <button type="button" name="stop">
         <svg viewBox="0 0 8 8" class="icon">
             <use xlink:href="#media-stop" class="icon-media-stop"></use>
         </svg>
     </button>
-    <button type="button" name="pause">
+    <button type="button" name="playpause">
         <svg viewBox="0 0 8 8" class="icon">
-            <use xlink:href="#media-pause" class="icon-media-pause"></use>
-        </svg>
-    </button>
-    <button type="button" name="play">
-        <svg viewBox="0 0 8 8" class="icon">
-            <use xlink:href="#media-play" class="icon-media-play"></use>
+            <use xlink:href="#media-<%if(state=='playing'){%>pause<%}else{%>play<%}%>" class="icon-media-<%if(state=='playing'){%>pause<%}else{%>play<%}%>"></use>
         </svg>
     </button>
     <button type="button" name="next">

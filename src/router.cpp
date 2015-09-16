@@ -55,9 +55,6 @@ plainsong::router::router(
         return out;
     };
 
-    // boost::shared_ptr<atlas::http::router> auth(new atlas::auth::router(io, conn));
-    // install(atlas::http::matcher("/api/auth(.*)", 1), auth);
-
     //
     // Player state.
     //
@@ -82,7 +79,7 @@ plainsong::router::router(
             if(s.get_string("state") == "paused")
                 g_player.pause();
             if(s.get_string("state") == "stopped")
-                g_player.stop();
+                g_player.queue_stop();
 
             // Volume.
             g_player.set_volume(s.get_int("volume"));
@@ -91,16 +88,22 @@ plainsong::router::router(
         }
     );
 
-    //
-    // Start playing a file.
-    //
-
+    // Start playing a file.  Return the new state.
     install<std::string>(
         atlas::http::matcher("/play/(.*)", "GET"),
         [audio_root, state](std::string path) {
-            g_player.play_file(
+            g_player.queue_file(
                 (audio_root / boost::filesystem::path(path)).string().c_str()
             );
+            return atlas::http::json_response(state());
+        }
+    );
+
+    // Skip to the next file in the playlist.  Return the new state.
+    install<>(
+        atlas::http::matcher("/next", "GET"),
+        [state]() {
+            g_player.queue_next();
             return atlas::http::json_response(state());
         }
     );
@@ -116,10 +119,10 @@ plainsong::router::router(
 
             boost::filesystem::path fragment(path);
             fragment.normalize();
-            atlas::log::test("path") << "fragment " << fragment.string();
+            atlas::log::information("plainsong::router") << "browse to " <<
+                fragment.string();
             boost::filesystem::path dir(audio_root / fragment);
             dir.normalize();
-            atlas::log::test("path") << "dir " << dir.string();
             out["path"] = fragment.string();
 
             for(
@@ -129,8 +132,6 @@ plainsong::router::router(
                 )
             {
                 styx::object file;
-                atlas::log::test("path") << "i " << i->path().string();
-                atlas::log::test("path") << "leaf " << i->path().leaf().string();
                 file["name"] = i->path().leaf().string();
                 file["path"] = (fragment / i->path().leaf()).string();
                 if(boost::filesystem::is_directory(i->path()))

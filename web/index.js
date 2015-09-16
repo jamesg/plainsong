@@ -57,7 +57,9 @@ var FileCollection = RestCollection.extend({
     parse: function() {
         var data = RestCollection.prototype.parse.apply(this, arguments);
         this.oldPath = this.path = data['path'];
-        return data['files'];
+        var files = data['files'];
+        files.unshift({ name: '..', path: data['path'] + '/..', type: 'dir' });
+        return files;
     },
     navigate: function(path) {
         this.path = this.oldPath + '/' + path;
@@ -81,20 +83,21 @@ var formatTime = function(seconds) {
 
 var Player = StaticView.extend({
     events: {
-        'click button[name=prev]': function() {},
         'click button[name=stop]': function() {
             this.model.set('state', 'stopped');
             this.model.save();
         },
-        'click button[name=pause]': function() {
-            this.model.set('state', 'paused');
+        'click button[name=playpause]': function() {
+            console.log('state', this.model.get('state'));
+            if(this.model.get('state') == 'playing')
+                this.model.set('state', 'paused');
+            else
+                this.model.set('state', 'playing');
             this.model.save();
         },
-        'click button[name=play]': function() {
-            this.model.set('state', 'playing');
-            this.model.save();
+        'click button[name=next]': function() {
+            this.model.fetch({ url: '/next' });
         },
-        'click button[name=next]': function() {},
         'click input[name=volume]': function() {
             this.model.set('volume', this.$('input[name=volume]:checked').val());
             this.model.save();

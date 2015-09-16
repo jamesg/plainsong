@@ -1,6 +1,8 @@
 #ifndef PLAINSONG_PLAYER_HPP
 #define PLAINSONG_PLAYER_HPP
 
+#include <deque>
+
 #include <boost/filesystem.hpp>
 
 #include "SDL2/SDL.h"
@@ -30,6 +32,20 @@ namespace plainsong
         // Load a file and start playing it from the beginning.
         void play_file(boost::filesystem::path);
 
+        // Add a file, and all files beyond it alphabetically within the same
+        // directory, to the playlist.
+        void queue_file(boost::filesystem::path);
+
+        // Skip to the next item in the playlist.  Throws an exception if the
+        // playlist is empty.
+        void queue_next();
+
+        // Stop playing and empty the queue.
+        void queue_stop();
+
+        // Access the playlist.
+        const std::deque<boost::filesystem::path>& queue() const;
+
         // Current location of the play head.
         int seconds() const;
 
@@ -42,10 +58,6 @@ namespace plainsong
         // Current player state.
         state_t state() const;
 
-        // Stop and unload any file loaded.  Has no effect if no file has been
-        // loaded.
-        void stop();
-
         // Pause the currently playing file.  Has no effect if there is no file
         // playing.
         void pause();
@@ -57,10 +69,15 @@ namespace plainsong
     private:
         static void postmix(void *, Uint8 *, int);
         static void finished();
+        
+        // Stop and unload any file loaded.  Has no effect if no file has been
+        // loaded.
+        void stop();
 
         int m_samples, m_volume;
         std::string m_filename;
         Mix_Music *m_music;
+        std::deque<boost::filesystem::path> m_queue;
     };
 
     extern player g_player;

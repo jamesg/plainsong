@@ -55,6 +55,8 @@ void plainsong::player::postmix(void *, Uint8 *, int length)
 void plainsong::player::finished()
 {
     g_player.stop();
+    if(g_player.queue().size())
+        g_player.queue_next();
 }
 
 std::string plainsong::player::filename() const
@@ -79,6 +81,45 @@ void plainsong::player::play_file(boost::filesystem::path file)
         );
 
     m_filename = file.leaf().string();
+}
+
+void plainsong::player::queue_file(boost::filesystem::path file)
+{
+    stop();
+    auto dir = file.parent_path();
+    m_queue.clear();
+    std::copy_if(
+        boost::filesystem::directory_iterator(dir),
+        boost::filesystem::directory_iterator(),
+        std::inserter(m_queue, m_queue.end()),
+        [file](const boost::filesystem::path& p) {
+            return p.leaf().string() >= file.leaf().string();
+        }
+    );
+    std::sort(m_queue.begin(), m_queue.end());
+    for(boost::filesystem::path p : queue())
+        atlas::log::test("plainsong::player::queue_file") << "file " << p.string();
+    queue_next();
+}
+
+void plainsong::player::queue_next()
+{
+    if(m_queue.empty())
+        throw std::runtime_error("the queue is empty");
+
+    play_file(m_queue.front());
+    m_queue.pop_front();
+}
+
+void plainsong::player::queue_stop()
+{
+    stop();
+    m_queue.clear();
+}
+
+const std::deque<boost::filesystem::path>& plainsong::player::queue() const
+{
+    return m_queue;
 }
 
 int plainsong::player::seconds() const
