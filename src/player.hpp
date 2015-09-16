@@ -66,10 +66,16 @@ namespace plainsong
         // already playing or no file has been loaded.
         void play();
 
+        // Skip forward ten seconds.
+        void skip_forward();
+
+        // Skip back ten seconds.
+        void skip_back();
+
     private:
         static void postmix(void *, Uint8 *, int);
         static void finished();
-        
+
         // Stop and unload any file loaded.  Has no effect if no file has been
         // loaded.
         void stop();

@@ -83,6 +83,9 @@ var formatTime = function(seconds) {
 
 var Player = StaticView.extend({
     events: {
+        'click button[name=backward]': function() {
+            this.model.fetch({ url: '/back' });
+        },
         'click button[name=stop]': function() {
             this.model.set('state', 'stopped');
             this.model.save();
@@ -94,6 +97,9 @@ var Player = StaticView.extend({
             else
                 this.model.set('state', 'playing');
             this.model.save();
+        },
+        'click button[name=forward]': function() {
+            this.model.fetch({ url: '/forward' });
         },
         'click button[name=next]': function() {
             this.model.fetch({ url: '/next' });

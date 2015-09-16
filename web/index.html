@@ -44,6 +44,11 @@
 </script>
 
 <script type="text/template" id="player-template">
+    <button type="button" name="backward">
+        <svg viewBox="0 0 8 8" class="icon">
+            <use xlink:href="#media-skip-backward" class="icon-media-skip-backward"></use>
+        </svg>
+    </button>
     <button type="button" name="stop">
         <svg viewBox="0 0 8 8" class="icon">
             <use xlink:href="#media-stop" class="icon-media-stop"></use>
@@ -52,6 +57,11 @@
     <button type="button" name="playpause">
         <svg viewBox="0 0 8 8" class="icon">
             <use xlink:href="#media-<%if(state=='playing'){%>pause<%}else{%>play<%}%>" class="icon-media-<%if(state=='playing'){%>pause<%}else{%>play<%}%>"></use>
+        </svg>
+    </button>
+    <button type="button" name="forward">
+        <svg viewBox="0 0 8 8" class="icon">
+            <use xlink:href="#media-skip-forward" class="icon-media-skip-forward"></use>
         </svg>
     </button>
     <button type="button" name="next">

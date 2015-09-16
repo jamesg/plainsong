@@ -108,6 +108,24 @@ plainsong::router::router(
         }
     );
 
+    // Skip forward ten seconds.
+    install<>(
+        atlas::http::matcher("/forward", "GET"),
+        [state]() {
+            g_player.skip_forward();
+            return atlas::http::json_response(state());
+        }
+    );
+
+    // Skip back ten seconds.
+    install<>(
+        atlas::http::matcher("/back", "GET"),
+        [state]() {
+            g_player.skip_back();
+            return atlas::http::json_response(state());
+        }
+    );
+
     //
     // File list.
     //

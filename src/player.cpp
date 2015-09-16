@@ -173,3 +173,22 @@ void plainsong::player::play()
 {
     Mix_ResumeMusic();
 }
+
+void plainsong::player::skip_forward()
+{
+    // Skip forward ten seconds.
+    Mix_RewindMusic();
+    m_samples = (seconds() + 10) * SAMPLERATE * 4;
+    Mix_SetMusicPosition(seconds());
+
+    if(!Mix_PlayingMusic())
+        player::finished();
+}
+
+void plainsong::player::skip_back()
+{
+    // Skip back ten seconds (or to the start of the track).
+    Mix_RewindMusic();
+    m_samples = (seconds() < 10) ? 0 : (seconds() - 10) * SAMPLERATE * 4;
+    Mix_SetMusicPosition(seconds());
+}
