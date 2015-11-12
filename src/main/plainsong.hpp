@@ -15,7 +15,7 @@ namespace hades
 namespace plainsong
 {
     struct options {
-        std::string address, db, port, audio;
+        std::string address, db, port, audio, user;
         options() :
             address("0.0.0.0")
         {
@@ -34,6 +34,7 @@ namespace plainsong
         boost::shared_ptr<atlas::http::router> m_router;
         boost::shared_ptr<atlas::http::server> m_http_server;
         atlas::http::mimetypes m_mime_information;
+	options m_options;
     };
 }
 

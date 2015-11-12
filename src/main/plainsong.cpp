@@ -2,6 +2,8 @@
 
 #include <boost/bind.hpp>
 #include <boost/make_shared.hpp>
+#include <sys/types.h>
+#include <pwd.h>
 
 #include "atlas/db/auth.hpp"
 #include "atlas/http/server/static_files.hpp"
@@ -17,7 +19,8 @@ plainsong::server::server(
     const options& opts,
     boost::shared_ptr<boost::asio::io_service> io
     ) :
-    m_io(io)
+    m_io(io),
+    m_options(opts)
 {
     // if(!opts.db.length())
         // throw std::runtime_error("database file is required");
@@ -53,6 +56,13 @@ void plainsong::server::start()
     atlas::log::information("plainsong::server::start") << "starting server";
     if(m_http_server)
         m_http_server->start();
+
+    if(!m_options.user.empty())
+    {
+        passwd *pwd = getpwnam(m_options.user.c_str());
+        setgid(pwd->pw_gid);
+        setuid(pwd->pw_uid);
+    }
 }
 
 void plainsong::server::stop()
@@ -69,6 +79,7 @@ int main(const int argc, const char *argv[])
         commandline::parameter("address", opts.address, "Server IP address"),
         commandline::parameter("port", opts.port, "Server port"),
         commandline::parameter("audio", opts.audio, "Audio path"),
+        commandline::parameter("user", opts.user, "User to switch to after starting server"),
         commandline::flag("help", show_help, "Show a help message")
     };
     commandline::parse(argc, argv, options);
